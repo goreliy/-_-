@@ -1,0 +1,239 @@
+{
+  "timestamp": "2026-01-21T13:53:09.237535",
+  "poll_period_ms": 1000,
+  "com_port": "MOCK",
+  "baudrate": 9600,
+  "sensors": [
+    {
+      "id": 1,
+      "name": "ХРАН. № 1",
+      "modbus_slave_id": 16,
+      "modbus_addr_temp": 1,
+      "modbus_addr_hum": 2,
+      "temperature": {
+        "value": 21.0,
+        "raw": 210,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "humidity": {
+        "value": 42.5,
+        "raw": 425,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "combined_status": "normal"
+    },
+    {
+      "id": 2,
+      "name": "ХРАН. № 2",
+      "modbus_slave_id": 16,
+      "modbus_addr_temp": 3,
+      "modbus_addr_hum": 4,
+      "temperature": {
+        "value": 21.1,
+        "raw": 211,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "humidity": {
+        "value": 43.5,
+        "raw": 435,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "combined_status": "normal"
+    },
+    {
+      "id": 3,
+      "name": "ХРАН. № 3",
+      "modbus_slave_id": 16,
+      "modbus_addr_temp": 5,
+      "modbus_addr_hum": 6,
+      "temperature": {
+        "value": 23.6,
+        "raw": 236,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "humidity": {
+        "value": 48.6,
+        "raw": 486,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "combined_status": "normal"
+    },
+    {
+      "id": 4,
+      "name": "ХРАН. № 4",
+      "modbus_slave_id": 16,
+      "modbus_addr_temp": 7,
+      "modbus_addr_hum": 8,
+      "temperature": {
+        "value": 23.5,
+        "raw": 235,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "humidity": {
+        "value": 40.6,
+        "raw": 406,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "combined_status": "normal"
+    },
+    {
+      "id": 5,
+      "name": "ХРАН. № 5",
+      "modbus_slave_id": 16,
+      "modbus_addr_temp": 9,
+      "modbus_addr_hum": 10,
+      "temperature": {
+        "value": 24.4,
+        "raw": 244,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "humidity": {
+        "value": 46.3,
+        "raw": 463,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "combined_status": "normal"
+    },
+    {
+      "id": 6,
+      "name": "ХРАН. № 6",
+      "modbus_slave_id": 16,
+      "modbus_addr_temp": 11,
+      "modbus_addr_hum": 12,
+      "temperature": {
+        "value": 23.9,
+        "raw": 239,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "humidity": {
+        "value": 49.7,
+        "raw": 497,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "combined_status": "normal"
+    },
+    {
+      "id": 7,
+      "name": "ХРАН. № 7",
+      "modbus_slave_id": 16,
+      "modbus_addr_temp": 13,
+      "modbus_addr_hum": 14,
+      "temperature": {
+        "value": 22.3,
+        "raw": 223,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "humidity": {
+        "value": 47.3,
+        "raw": 473,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "combined_status": "normal"
+    },
+    {
+      "id": 8,
+      "name": "ХРАН. № 8",
+      "modbus_slave_id": 16,
+      "modbus_addr_temp": 15,
+      "modbus_addr_hum": 16,
+      "temperature": {
+        "value": 23.7,
+        "raw": 237,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "humidity": {
+        "value": 48.0,
+        "raw": 480,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "combined_status": "normal"
+    },
+    {
+      "id": 9,
+      "name": "ХРАН. № 9",
+      "modbus_slave_id": 16,
+      "modbus_addr_temp": 17,
+      "modbus_addr_hum": 18,
+      "temperature": {
+        "value": 25.2,
+        "raw": 252,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "humidity": {
+        "value": 47.8,
+        "raw": 478,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "combined_status": "normal"
+    },
+    {
+      "id": 10,
+      "name": "ХРАН. № 10",
+      "modbus_slave_id": 16,
+      "modbus_addr_temp": 19,
+      "modbus_addr_hum": 20,
+      "temperature": {
+        "value": 25.9,
+        "raw": 259,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "humidity": {
+        "value": 45.4,
+        "raw": 454,
+        "status": "normal",
+        "modbus_status": 0,
+        "timestamp": "2026-01-21T13:53:09.237535"
+      },
+      "combined_status": "normal"
+    }
+  ],
+  "statistics": {
+    "total_polls": 474,
+    "successful_polls": 474,
+    "failed_polls": 0,
+    "last_error": null
+  },
+  "_mock": {
+    "generator": "mock_current_generator",
+    "scenario": "normal",
+    "version": "1.0"
+  }
+}

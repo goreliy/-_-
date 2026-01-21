@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Статусные карточки -->
+    <div class="status-cards">
+        <div class="card status-card" id="modbus-card">
+            <div class="card-header">
+                <span class="icon">🔌</span>
+                <h3>Modbus Server</h3>
+                <span class="status-badge stopped" id="modbus-status">Stopped</span>
+            </div>
+            <div class="card-body">
+                <div class="stat-row">
+                    <span class="label">Порт</span>
+                    <span class="value" id="modbus-port">5020</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Unit ID</span>
+                    <span class="value" id="modbus-unit">16</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Сценарий</span>
+                    <span class="value" id="modbus-scenario">normal</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-sm" onclick="toggleServer('modbus')">Toggle</button>
+                <a href="/modbus" class="btn btn-sm">Настройки</a>
+            </div>
+        </div>
+        
+        <div class="card status-card" id="current-card">
+            <div class="card-header">
+                <span class="icon">📄</span>
+                <h3>Current Generator</h3>
+                <span class="status-badge stopped" id="current-status">Stopped</span>
+            </div>
+            <div class="card-body">
+                <div class="stat-row">
+                    <span class="label">Датчиков</span>
+                    <span class="value" id="current-sensors">10</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Интервал</span>
+                    <span class="value" id="current-interval">1000 мс</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Сценарий</span>
+                    <span class="value" id="current-scenario">normal</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-sm" onclick="toggleServer('current')">Toggle</button>
+                <a href="/current" class="btn btn-sm">Настройки</a>
+            </div>
+        </div>
+        
+        <div class="card status-card" id="archive-card">
+            <div class="card-header">
+                <span class="icon">🗄️</span>
+                <h3>Archive Server</h3>
+                <span class="status-badge stopped" id="archive-status">Stopped</span>
+            </div>
+            <div class="card-body">
+                <div class="stat-row">
+                    <span class="label">Записей</span>
+                    <span class="value" id="archive-records">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Событий</span>
+                    <span class="value" id="archive-events">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">История</span>
+                    <span class="value" id="archive-days">30 дней</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-sm" onclick="toggleServer('archive')">Toggle</button>
+                <a href="/archive" class="btn btn-sm">Настройки</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Быстрые сценарии -->
+    <div class="card">
+        <div class="card-header">
+            <h3>🎭 Быстрые сценарии</h3>
+        </div>
+        <div class="card-body">
+            <div class="scenario-buttons">
+                <button class="btn scenario-btn" onclick="setScenario('normal')">🔵 Normal</button>
+                <button class="btn scenario-btn" onclick="setScenario('drift_up')">📈 Drift Up</button>
+                <button class="btn scenario-btn" onclick="setScenario('drift_down')">📉 Drift Down</button>
+                <button class="btn scenario-btn" onclick="setScenario('sine')">〰️ Sine</button>
+                <button class="btn scenario-btn warning" onclick="setScenario('intermittent')">⚡ Intermittent</button>
+                <button class="btn scenario-btn danger" onclick="setScenario('offline')">🔴 Offline</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Превью датчиков -->
+    <div class="card">
+        <div class="card-header">
+            <h3>📡 Текущие значения датчиков</h3>
+            <button class="btn btn-sm" onclick="refreshPreview()">🔄 Обновить</button>
+        </div>
+        <div class="card-body">
+            <div class="preview-grid" id="sensors-preview">
+                <div class="loading">Загрузка...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для графика архива -->
+<div id="archive-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-title">Архив датчика</h3>
+            <button class="btn btn-sm" onclick="closeArchiveModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="chart-controls">
+                <select id="chart-period" onchange="updateChart()">
+                    <option value="1">1 час</option>
+                    <option value="6">6 часов</option>
+                    <option value="24" selected>24 часа</option>
+                    <option value="168">Неделя</option>
+                </select>
+            </div>
+            <canvas id="archive-chart" width="800" height="400"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

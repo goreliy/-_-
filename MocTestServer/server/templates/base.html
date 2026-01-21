@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mock Server{% endblock %} - КВТ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <span class="icon">🌡️</span>
+            <h1>KVT Mock</h1>
+            <span class="version">v1.0</span>
+        </div>
+        
+        <ul class="nav-menu">
+            <li class="nav-item {{ 'active' if request.endpoint == 'dashboard' }}">
+                <a href="/">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item {{ 'active' if request.endpoint == 'modbus_page' }}">
+                <a href="/modbus">
+                    <span class="icon">🔌</span>
+                    <span>Modbus Server</span>
+                </a>
+            </li>
+            <li class="nav-item {{ 'active' if request.endpoint == 'current_page' }}">
+                <a href="/current">
+                    <span class="icon">📄</span>
+                    <span>Current Generator</span>
+                </a>
+            </li>
+            <li class="nav-item {{ 'active' if request.endpoint == 'archive_page' }}">
+                <a href="/archive">
+                    <span class="icon">🗄️</span>
+                    <span>Archive Server</span>
+                </a>
+            </li>
+            <li class="nav-item {{ 'active' if request.endpoint == 'scenarios_page' }}">
+                <a href="/scenarios">
+                    <span class="icon">🎭</span>
+                    <span>Сценарии</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <div class="quick-actions">
+                <button class="btn btn-success btn-sm" onclick="startAll()">▶ Start All</button>
+                <button class="btn btn-danger btn-sm" onclick="stopAll()">⏹ Stop All</button>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="content">
+        <header class="content-header">
+            <h2>{% block page_title %}{% endblock %}</h2>
+            <div class="header-actions">
+                {% block header_actions %}{% endblock %}
+            </div>
+        </header>
+        
+        <div class="content-body">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    
+    <div id="toast-container"></div>
+    
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

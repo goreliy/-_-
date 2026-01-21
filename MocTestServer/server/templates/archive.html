@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Archive Server{% endblock %}
+{% block page_title %}Mock Archive Server{% endblock %}
+
+{% block header_actions %}
+<button class="btn" id="btn-toggle" onclick="toggleArchive()">
+    <span id="toggle-text">▶ Start</span>
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="settings-page">
+    <div class="settings-grid">
+        <!-- Данные -->
+        <div class="card">
+            <div class="card-header">
+                <h3>📊 Данные</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Количество датчиков</label>
+                    <input type="number" id="cfg-sensors" value="10" min="1" max="127">
+                </div>
+                <div class="form-group">
+                    <label>Глубина истории (дней)</label>
+                    <input type="number" id="cfg-days" value="30" min="1" max="365">
+                </div>
+                <div class="form-group">
+                    <label>Разрешение (мс)</label>
+                    <input type="number" id="cfg-resolution" value="60000" min="1000" max="3600000">
+                </div>
+            </div>
+        </div>
+        
+        <!-- События -->
+        <div class="card">
+            <div class="card-header">
+                <h3>🔔 События</h3>
+            </div>
+            <div class="card-body">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="cfg-events" checked>
+                    <label for="cfg-events">Генерировать события</label>
+                </div>
+                <div class="form-group">
+                    <label>Частота событий</label>
+                    <input type="range" id="cfg-event-freq" min="0" max="100" value="1"
+                           oninput="document.getElementById('event-val').textContent = (this.value/100).toFixed(2)">
+                    <span id="event-val">0.01</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Статус -->
+        <div class="card">
+            <div class="card-header">
+                <h3>📈 Статус хранилища</h3>
+            </div>
+            <div class="card-body">
+                <div class="stat-row">
+                    <span class="label">Записей</span>
+                    <span class="value" id="stat-records">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Событий</span>
+                    <span class="value" id="stat-events">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Неквитированных</span>
+                    <span class="value" id="stat-unack">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Память</span>
+                    <span class="value" id="stat-memory">0 MB</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Кнопки -->
+    <div class="actions-bar">
+        <button class="btn btn-primary" onclick="saveConfig()">💾 Сохранить</button>
+        <button class="btn" onclick="loadConfig()">🔄 Загрузить</button>
+        <button class="btn btn-danger" onclick="regenerateData()">🔄 Перегенерировать</button>
+    </div>
+    
+    <!-- Тестовый запрос -->
+    <div class="card">
+        <div class="card-header">
+            <h3>🔍 Тестовый запрос</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Датчик ID</label>
+                    <input type="number" id="query-sensor" value="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Период (часов назад)</label>
+                    <input type="number" id="query-hours" value="24" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Разрешение</label>
+                    <select id="query-resolution">
+                        <option value="minute">Минуты</option>
+                        <option value="hour" selected>Часы</option>
+                        <option value="day">Дни</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn" onclick="queryData()">🔍 Запросить</button>
+        </div>
+    </div>
+    
+    <!-- Результат запроса -->
+    <div class="card">
+        <div class="card-header">
+            <h3>📋 Результат запроса</h3>
+        </div>
+        <div class="card-body">
+            <pre class="json-preview" id="query-result">Выполните запрос...</pre>
+        </div>
+    </div>
+    
+    <!-- События -->
+    <div class="card">
+        <div class="card-header">
+            <h3>🔔 Последние события</h3>
+            <button class="btn btn-sm" onclick="refreshEvents()">🔄 Обновить</button>
+        </div>
+        <div class="card-body">
+            <table class="data-table" id="events-table">
+                <thead>
+                    <tr>
+                        <th>Время</th>
+                        <th>Датчик</th>
+                        <th>Тип</th>
+                        <th>Значение</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="5" class="loading">Загрузка...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/archive.js') }}"></script>
+{% endblock %}

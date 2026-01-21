@@ -1,0 +1,4 @@
+flask>=2.0.0
+pymodbus>=2.5.0
+apscheduler>=3.9.0
+watchdog>=2.1.0

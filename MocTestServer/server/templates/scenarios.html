@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}Сценарии{% endblock %}
+{% block page_title %}Управление сценариями{% endblock %}
+
+{% block content %}
+<div class="scenarios-page">
+    <div class="scenarios-grid">
+        <!-- Нормальные сценарии -->
+        <div class="card">
+            <div class="card-header">
+                <h3>🔵 Нормальные</h3>
+            </div>
+            <div class="card-body">
+                <div class="scenario-list">
+                    <div class="scenario-item" onclick="selectScenario('normal')">
+                        <div class="scenario-icon">📊</div>
+                        <div class="scenario-info">
+                            <h4>Normal</h4>
+                            <p>Стабильные значения с небольшими колебаниями</p>
+                        </div>
+                    </div>
+                    <div class="scenario-item" onclick="selectScenario('sine')">
+                        <div class="scenario-icon">〰️</div>
+                        <div class="scenario-info">
+                            <h4>Sine</h4>
+                            <p>Синусоидальные колебания</p>
+                        </div>
+                    </div>
+                    <div class="scenario-item" onclick="selectScenario('daily_cycle')">
+                        <div class="scenario-icon">🌅</div>
+                        <div class="scenario-info">
+                            <h4>Daily Cycle</h4>
+                            <p>Суточный цикл температуры</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Сценарии изменений -->
+        <div class="card">
+            <div class="card-header">
+                <h3>📈 Изменения</h3>
+            </div>
+            <div class="card-body">
+                <div class="scenario-list">
+                    <div class="scenario-item" onclick="selectScenario('drift_up')">
+                        <div class="scenario-icon">📈</div>
+                        <div class="scenario-info">
+                            <h4>Drift Up</h4>
+                            <p>Плавное повышение температуры</p>
+                        </div>
+                    </div>
+                    <div class="scenario-item" onclick="selectScenario('drift_down')">
+                        <div class="scenario-icon">📉</div>
+                        <div class="scenario-info">
+                            <h4>Drift Down</h4>
+                            <p>Плавное понижение температуры</p>
+                        </div>
+                    </div>
+                    <div class="scenario-item" onclick="selectScenario('hvac_control')">
+                        <div class="scenario-icon">❄️</div>
+                        <div class="scenario-info">
+                            <h4>HVAC Control</h4>
+                            <p>Имитация работы кондиционера</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Сценарии ошибок -->
+        <div class="card">
+            <div class="card-header">
+                <h3>⚠️ Ошибки</h3>
+            </div>
+            <div class="card-body">
+                <div class="scenario-list">
+                    <div class="scenario-item warning" onclick="selectScenario('intermittent')">
+                        <div class="scenario-icon">⚡</div>
+                        <div class="scenario-info">
+                            <h4>Intermittent</h4>
+                            <p>Периодические сбои связи</p>
+                        </div>
+                    </div>
+                    <div class="scenario-item warning" onclick="selectScenario('timeout')">
+                        <div class="scenario-icon">⏱️</div>
+                        <div class="scenario-info">
+                            <h4>Timeout</h4>
+                            <p>Частые таймауты</p>
+                        </div>
+                    </div>
+                    <div class="scenario-item danger" onclick="selectScenario('offline')">
+                        <div class="scenario-icon">🔴</div>
+                        <div class="scenario-info">
+                            <h4>Offline</h4>
+                            <p>Все датчики недоступны</p>
+                        </div>
+                    </div>
+                    <div class="scenario-item danger" onclick="selectScenario('sensor_failure')">
+                        <div class="scenario-icon">💥</div>
+                        <div class="scenario-info">
+                            <h4>Sensor Failure</h4>
+                            <p>Постепенный выход из строя</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Реальные сценарии -->
+        <div class="card">
+            <div class="card-header">
+                <h3>🌍 Реальные ситуации</h3>
+            </div>
+            <div class="card-body">
+                <div class="scenario-list">
+                    <div class="scenario-item" onclick="selectScenario('door_open')">
+                        <div class="scenario-icon">🚪</div>
+                        <div class="scenario-info">
+                            <h4>Door Open</h4>
+                            <p>Периодическое открытие двери</p>
+                        </div>
+                    </div>
+                    <div class="scenario-item warning" onclick="selectScenario('power_outage')">
+                        <div class="scenario-icon">🔌</div>
+                        <div class="scenario-info">
+                            <h4>Power Outage</h4>
+                            <p>Отключение питания</p>
+                        </div>
+                    </div>
+                    <div class="scenario-item" onclick="selectScenario('partial_offline')">
+                        <div class="scenario-icon">📡</div>
+                        <div class="scenario-info">
+                            <h4>Partial Offline</h4>
+                            <p>Часть датчиков недоступна</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Текущий сценарий -->
+    <div class="card current-scenario-card">
+        <div class="card-header">
+            <h3>🎭 Текущий сценарий</h3>
+        </div>
+        <div class="card-body">
+            <div class="current-scenario-display">
+                <span class="scenario-name" id="current-scenario">normal</span>
+                <p id="scenario-description">Стабильные значения с небольшими колебаниями</p>
+            </div>
+            <div class="scenario-targets">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="apply-modbus" checked>
+                    <label for="apply-modbus">Modbus Server</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="apply-current" checked>
+                    <label for="apply-current">Current Generator</label>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="applyScenario()">✓ Применить ко всем</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let selectedScenario = 'normal';
+
+const scenarioDescriptions = {
+    'normal': 'Стабильные значения с небольшими колебаниями',
+    'drift_up': 'Плавное повышение температуры (имитация нагрева)',
+    'drift_down': 'Плавное понижение температуры (имитация охлаждения)',
+    'sine': 'Периодические синусоидальные колебания',
+    'daily_cycle': 'Имитация суточного цикла температуры',
+    'hvac_control': 'Имитация работы системы кондиционирования',
+    'intermittent': 'Периодические сбои связи с датчиками',
+    'timeout': 'Медленные ответы с частыми таймаутами',
+    'offline': 'Все датчики недоступны',
+    'sensor_failure': 'Постепенный выход датчиков из строя',
+    'door_open': 'Периодическое открытие двери (резкие изменения)',
+    'power_outage': 'Отключение питания с последующим восстановлением',
+    'partial_offline': 'Некоторые датчики недоступны'
+};
+
+function selectScenario(name) {
+    selectedScenario = name;
+    
+    document.querySelectorAll('.scenario-item').forEach(item => {
+        item.classList.remove('selected');
+    });
+    event.currentTarget.classList.add('selected');
+    
+    document.getElementById('current-scenario').textContent = name;
+    document.getElementById('scenario-description').textContent = scenarioDescriptions[name] || name;
+}
+
+async function applyScenario() {
+    try {
+        await api('/api/set_scenario_all', 'POST', { scenario: selectedScenario });
+        showToast(`Сценарий "${selectedScenario}" применён`, 'success');
+    } catch (e) {
+        showToast('Ошибка: ' + e.message, 'error');
+    }
+}
+
+// Load current scenario
+async function loadCurrentScenario() {
+    try {
+        const status = await api('/api/status');
+        const scenario = status.modbus?.scenario || status.current?.scenario || 'normal';
+        selectedScenario = scenario;
+        document.getElementById('current-scenario').textContent = scenario;
+        document.getElementById('scenario-description').textContent = scenarioDescriptions[scenario] || scenario;
+    } catch (e) {
+        console.error('Error loading scenario:', e);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadCurrentScenario);
+</script>
+{% endblock %}

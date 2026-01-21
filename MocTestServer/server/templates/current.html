@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Current Generator{% endblock %}
+{% block page_title %}Mock Current Generator{% endblock %}
+
+{% block header_actions %}
+<button class="btn" id="btn-toggle" onclick="toggleCurrent()">
+    <span id="toggle-text">▶ Start</span>
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="settings-page">
+    <div class="settings-grid">
+        <!-- Выходные файлы -->
+        <div class="card">
+            <div class="card-header">
+                <h3>📁 Выходные файлы</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Путь current.json</label>
+                    <input type="text" id="cfg-current-path" value="../data/current.json" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Путь modbus_log.json</label>
+                    <input type="text" id="cfg-log-path" value="../data/modbus_log.json" readonly>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="cfg-gen-log" checked>
+                    <label for="cfg-gen-log">Генерировать лог Modbus</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Датчики -->
+        <div class="card">
+            <div class="card-header">
+                <h3>📡 Датчики</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Количество датчиков</label>
+                    <input type="range" id="cfg-sensors" min="1" max="127" value="10"
+                           oninput="document.getElementById('sensors-val').textContent = this.value">
+                    <span id="sensors-val">10</span>
+                </div>
+                <div class="form-group">
+                    <label>Префикс имени</label>
+                    <input type="text" id="cfg-name-prefix" value="ХРАН. №">
+                </div>
+                <div class="form-group">
+                    <label>Slave ID</label>
+                    <input type="number" id="cfg-slave-id" value="16" min="1" max="247">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Генерация -->
+        <div class="card">
+            <div class="card-header">
+                <h3>⚙️ Генерация</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Интервал генерации (мс)</label>
+                    <input type="number" id="cfg-interval" value="1000" min="100" max="60000">
+                </div>
+                <div class="form-group">
+                    <label>Сценарий</label>
+                    <select id="cfg-scenario">
+                        <option value="normal">Normal</option>
+                        <option value="drift_up">Drift Up</option>
+                        <option value="drift_down">Drift Down</option>
+                        <option value="sine">Sine</option>
+                        <option value="daily_cycle">Daily Cycle</option>
+                        <option value="intermittent">Intermittent</option>
+                        <option value="offline">Offline</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Статистика -->
+        <div class="card">
+            <div class="card-header">
+                <h3>📊 Статистика</h3>
+            </div>
+            <div class="card-body">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-total">0</span>
+                        <span class="stat-label">Всего опросов</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-success">0</span>
+                        <span class="stat-label">Успешных</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-failed">0</span>
+                        <span class="stat-label">Ошибок</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Кнопки -->
+    <div class="actions-bar">
+        <button class="btn btn-primary" onclick="saveConfig()">💾 Сохранить</button>
+        <button class="btn" onclick="loadConfig()">🔄 Загрузить</button>
+        <button class="btn" onclick="generateOnce()">⚡ Сгенерировать раз</button>
+    </div>
+    
+    <!-- Превью current.json -->
+    <div class="card">
+        <div class="card-header">
+            <h3>👁️ Превью current.json</h3>
+            <button class="btn btn-sm" onclick="refreshPreview()">🔄 Обновить</button>
+        </div>
+        <div class="card-body">
+            <pre class="json-preview" id="json-preview">Загрузка...</pre>
+        </div>
+    </div>
+    
+    <!-- Превью modbus_log.json -->
+    <div class="card">
+        <div class="card-header">
+            <h3>📜 Превью modbus_log.json</h3>
+        </div>
+        <div class="card-body">
+            <div class="log-format-info">
+                <p>Формат записей лога:</p>
+                <ul>
+                    <li><strong>TX</strong> - запрос: SlaveID FuncCode StartAddr Quantity CRC</li>
+                    <li><strong>RX</strong> - ответ: SlaveID FuncCode ByteCount Data CRC</li>
+                    <li><strong>response_time_ms</strong> - время ответа в миллисекундах</li>
+                </ul>
+            </div>
+            <pre class="json-preview" id="log-preview">Загрузка...</pre>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/current.js') }}"></script>
+{% endblock %}

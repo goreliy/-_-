@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Modbus Server{% endblock %}
+{% block page_title %}Mock Modbus Server (RTU){% endblock %}
+
+{% block header_actions %}
+<button class="btn" id="btn-toggle" onclick="toggleModbus()">
+    <span id="toggle-text">▶ Start</span>
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="settings-page">
+    <div class="settings-grid">
+        <!-- Секция Сервер -->
+        <div class="card">
+            <div class="card-header">
+                <h3>🔌 Сервер</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Порт</label>
+                    <input type="number" id="cfg-port" value="5020" min="1024" max="65535">
+                </div>
+                <div class="form-group">
+                    <label>Unit ID</label>
+                    <input type="number" id="cfg-unit-id" value="16" min="1" max="247">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Секция Датчики -->
+        <div class="card">
+            <div class="card-header">
+                <h3>📡 Датчики</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Количество датчиков</label>
+                    <input type="range" id="cfg-sensors" min="1" max="127" value="10" 
+                           oninput="document.getElementById('sensors-val').textContent = this.value">
+                    <span id="sensors-val">10</span>
+                </div>
+                <div class="form-group">
+                    <label>Базовый адрес значений</label>
+                    <input type="number" id="cfg-value-base" value="30000" min="0" max="65535">
+                </div>
+                <div class="form-group">
+                    <label>Базовый адрес статусов</label>
+                    <input type="number" id="cfg-status-base" value="40000" min="0" max="65535">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Секция Значения -->
+        <div class="card">
+            <div class="card-header">
+                <h3>🌡️ Значения температуры</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Base</label>
+                        <input type="number" id="cfg-temp-base" value="22" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Variation</label>
+                        <input type="number" id="cfg-temp-var" value="2" step="0.1">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Min</label>
+                        <input type="number" id="cfg-temp-min" value="-40" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Max</label>
+                        <input type="number" id="cfg-temp-max" value="85" step="0.1">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Секция Значения влажности -->
+        <div class="card">
+            <div class="card-header">
+                <h3>💧 Значения влажности</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Base</label>
+                        <input type="number" id="cfg-hum-base" value="45" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Variation</label>
+                        <input type="number" id="cfg-hum-var" value="5" step="0.1">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Min</label>
+                        <input type="number" id="cfg-hum-min" value="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Max</label>
+                        <input type="number" id="cfg-hum-max" value="100" step="0.1">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Секция Ошибки -->
+        <div class="card">
+            <div class="card-header">
+                <h3>⚠️ Симуляция ошибок</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Error Rate</label>
+                    <input type="range" id="cfg-error-rate" min="0" max="100" value="0"
+                           oninput="document.getElementById('error-val').textContent = this.value + '%'">
+                    <span id="error-val">0%</span>
+                </div>
+                <div class="form-group">
+                    <label>Timeout Rate</label>
+                    <input type="range" id="cfg-timeout-rate" min="0" max="100" value="0"
+                           oninput="document.getElementById('timeout-val').textContent = this.value + '%'">
+                    <span id="timeout-val">0%</span>
+                </div>
+                <div class="form-group">
+                    <label>Offline датчики (через запятую)</label>
+                    <input type="text" id="cfg-offline" placeholder="1, 3, 5">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Секция Сценарий -->
+        <div class="card">
+            <div class="card-header">
+                <h3>🎭 Сценарий</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Сценарий поведения</label>
+                    <select id="cfg-scenario">
+                        <option value="normal">Normal - Стабильные значения</option>
+                        <option value="drift_up">Drift Up - Плавный рост</option>
+                        <option value="drift_down">Drift Down - Плавное снижение</option>
+                        <option value="sine">Sine - Синусоидальные колебания</option>
+                        <option value="daily_cycle">Daily Cycle - Суточный цикл</option>
+                        <option value="hvac_control">HVAC Control - Имитация HVAC</option>
+                        <option value="intermittent">Intermittent - Периодические сбои</option>
+                        <option value="offline">Offline - Датчики недоступны</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Интервал обновления (мс)</label>
+                    <input type="number" id="cfg-interval" value="1000" min="100" max="60000">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Кнопки -->
+    <div class="actions-bar">
+        <button class="btn btn-primary" onclick="saveConfig()">💾 Сохранить</button>
+        <button class="btn" onclick="loadConfig()">🔄 Загрузить</button>
+    </div>
+    
+    <!-- Таблица регистров -->
+    <div class="card">
+        <div class="card-header">
+            <h3>📋 Текущие регистры</h3>
+            <button class="btn btn-sm" onclick="refreshRegisters()">🔄 Обновить</button>
+        </div>
+        <div class="card-body">
+            <table class="data-table" id="registers-table">
+                <thead>
+                    <tr>
+                        <th>Датчик</th>
+                        <th>Адрес T</th>
+                        <th>Температура</th>
+                        <th>Raw</th>
+                        <th>Адрес H</th>
+                        <th>Влажность</th>
+                        <th>Raw</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="7" class="loading">Загрузка...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Лог Modbus запросов -->
+    <div class="card">
+        <div class="card-header">
+            <h3>📜 Лог Modbus посылок</h3>
+            <div class="header-actions">
+                <span id="log-stats" class="log-stats"></span>
+                <button class="btn btn-sm" onclick="refreshModbusLog()">🔄 Обновить</button>
+                <button class="btn btn-sm btn-danger" onclick="clearModbusLog()">🗑 Очистить</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="log-statistics" id="log-statistics">
+                <div class="stat-item">
+                    <span class="stat-label">TX:</span>
+                    <span class="stat-value" id="stat-tx">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">RX:</span>
+                    <span class="stat-value" id="stat-rx">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Ошибки:</span>
+                    <span class="stat-value" id="stat-errors">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Avg время:</span>
+                    <span class="stat-value" id="stat-avg-time">0 мс</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Min/Max:</span>
+                    <span class="stat-value" id="stat-minmax-time">0/0 мс</span>
+                </div>
+            </div>
+            <div class="modbus-log-container">
+                <table class="data-table modbus-log-table" id="modbus-log-table">
+                    <thead>
+                        <tr>
+                            <th width="180">Время</th>
+                            <th width="50">TX/RX</th>
+                            <th width="250">Raw HEX</th>
+                            <th>Расшифровка</th>
+                            <th width="100">Время ответа</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5" class="loading">Нет данных</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/modbus.js') }}"></script>
+{% endblock %}
